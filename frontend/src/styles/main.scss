@@ -1,0 +1,812 @@
+@use 'sass:color';
+
+// ─── Design Tokens ────────────────────────────────────────────────────────────
+$font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+$font-mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', ui-monospace, monospace;
+
+// Colors
+$bg:           #07070f;
+$surface:      #0f0f1e;
+$surface-2:    #16162b;
+$surface-3:    #1d1d35;
+$border:       rgba(255, 255, 255, 0.07);
+$border-hover: rgba(255, 255, 255, 0.14);
+$border-focus: rgba(99, 102, 241, 0.6);
+
+$primary:      #6366f1;
+$primary-2:    #8b5cf6;
+$accent:       #a78bfa;
+$success:      #10b981;
+$success-2:    #059669;
+$warning:      #f59e0b;
+$error:        #ef4444;
+
+$text:         #e2e8f0;
+$text-dim:     #94a3b8;
+$text-muted:   #4e5a6d;
+
+// Radii
+$r-sm:  6px;
+$r-md:  10px;
+$r-lg:  14px;
+$r-xl:  20px;
+$r-pill: 100px;
+
+// Shadows
+$shadow-sm:   0 1px 3px rgba(0, 0, 0, 0.4);
+$shadow-md:   0 4px 20px rgba(0, 0, 0, 0.5);
+$shadow-glow: 0 0 30px rgba(99, 102, 241, 0.18);
+
+// Transitions
+$ease:    cubic-bezier(0.4, 0, 0.2, 1);
+$trans:   all 0.18s $ease;
+$trans-s: all 0.12s $ease;
+
+// ─── Reset ───────────────────────────────────────────────────────────────────
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+// ─── Base ────────────────────────────────────────────────────────────────────
+body {
+  background-color: $bg;
+  background-image:
+    radial-gradient(ellipse 90% 55% at 15% -5%,  rgba(99, 102, 241, 0.10), transparent),
+    radial-gradient(ellipse 70% 45% at 85% 105%, rgba(139, 92, 246, 0.07), transparent),
+    radial-gradient(ellipse 50% 30% at 50%  50%, rgba(99, 102, 241, 0.03), transparent);
+  background-attachment: fixed;
+  color: $text;
+  font-family: $font-sans;
+  font-size: 15px;
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+// ─── Scrollbar ────────────────────────────────────────────────────────────────
+::-webkit-scrollbar       { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
+  &:hover { background: rgba(255, 255, 255, 0.22); }
+}
+
+// ─── Utility ─────────────────────────────────────────────────────────────────
+.gradient-text {
+  background: linear-gradient(135deg, #818cf8, $primary-2, $accent);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+// ─── Layout ──────────────────────────────────────────────────────────────────
+.app-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  flex: 1;
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 2rem 1.5rem 5rem;
+}
+
+.content-grid {
+  display: grid;
+  grid-template-columns: 370px 1fr;
+  gap: 1.25rem;
+  align-items: start;
+
+  @media (max-width: 1080px) { grid-template-columns: 1fr; }
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+// ─── Header ──────────────────────────────────────────────────────────────────
+.app-header {
+  padding: 0 2rem;
+  height: 58px;
+  border-bottom: 1px solid $border;
+  background: rgba($surface, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+
+  .header-inner {
+    max-width: 1380px;
+    margin: 0 auto;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 0.875rem;
+  }
+
+  .header-logo {
+    width: 34px;
+    height: 34px;
+    border-radius: $r-md;
+    background: linear-gradient(135deg, $primary, $primary-2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 0 16px rgba($primary, 0.45), $shadow-sm;
+    color: #fff;
+  }
+
+  .header-text {
+    h1 {
+      font-size: 1rem;
+      font-weight: 700;
+      letter-spacing: -0.025em;
+      line-height: 1;
+    }
+    p {
+      font-size: 0.72rem;
+      color: $text-muted;
+      margin-top: 2px;
+    }
+  }
+
+  .header-badge {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: rgba($success, 0.08);
+    border: 1px solid rgba($success, 0.2);
+    border-radius: $r-pill;
+    padding: 0.3rem 0.7rem;
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: $success;
+      box-shadow: 0 0 6px rgba($success, 0.7);
+      animation: pulse-dot 2.4s ease-in-out infinite;
+    }
+
+    span:last-child {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: $success;
+    }
+  }
+}
+
+// ─── Card ─────────────────────────────────────────────────────────────────────
+.glass-card {
+  background: $surface;
+  border: 1px solid $border;
+  border-radius: $r-lg;
+  overflow: hidden;
+  transition: border-color 0.2s $ease;
+
+  &:hover { border-color: $border-hover; }
+
+  .card-head {
+    padding: 0.875rem 1.125rem;
+    border-bottom: 1px solid $border;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .card-title {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: $text;
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    letter-spacing: -0.01em;
+
+    .card-icon {
+      color: $accent;
+      display: flex;
+      align-items: center;
+    }
+
+    .card-title-note {
+      font-size: 0.68rem;
+      font-weight: 500;
+      color: $text-muted;
+      background: $surface-2;
+      border: 1px solid $border;
+      border-radius: $r-pill;
+      padding: 0.1rem 0.5rem;
+      margin-left: 0.25rem;
+    }
+  }
+
+  .card-body { padding: 1.125rem; }
+}
+
+// ─── Tag ─────────────────────────────────────────────────────────────────────
+.tag {
+  font-size: 0.68rem;
+  font-weight: 500;
+  color: $text-muted;
+  background: $surface-2;
+  border: 1px solid $border;
+  border-radius: $r-pill;
+  padding: 0.15rem 0.55rem;
+}
+
+// ─── Form ─────────────────────────────────────────────────────────────────────
+.form-field {
+  margin-bottom: 0.875rem;
+
+  label {
+    display: block;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: $text-muted;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    margin-bottom: 0.35rem;
+  }
+
+  textarea {
+    display: block;
+    width: 100%;
+    background: $surface-2;
+    border: 1px solid $border;
+    border-radius: $r-sm;
+    color: $text;
+    font-family: $font-sans;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    padding: 0.6rem 0.825rem;
+    resize: vertical;
+    transition: $trans;
+    outline: none;
+
+    &::placeholder { color: $text-muted; }
+
+    &:hover:not(:focus) { border-color: $border-hover; }
+
+    &:focus {
+      border-color: $primary;
+      background: $surface-3;
+      box-shadow: 0 0 0 3px rgba($primary, 0.12);
+    }
+  }
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
+}
+
+// ─── Buttons ─────────────────────────────────────────────────────────────────
+%btn-base {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-family: $font-sans;
+  font-size: 0.825rem;
+  font-weight: 600;
+  border-radius: $r-sm;
+  cursor: pointer;
+  transition: $trans;
+  outline: none;
+  white-space: nowrap;
+
+  &:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+    pointer-events: none;
+  }
+}
+
+.btn-primary {
+  @extend %btn-base;
+  background: linear-gradient(135deg, $primary, $primary-2);
+  border: none;
+  color: #fff;
+  padding: 0.575rem 1.125rem;
+  box-shadow: 0 2px 8px rgba($primary, 0.3);
+
+  &:hover {
+    box-shadow: 0 4px 20px rgba($primary, 0.45), 0 0 0 1px rgba($primary, 0.4);
+    transform: translateY(-1px);
+  }
+
+  &:active { transform: translateY(0); box-shadow: $shadow-sm; }
+}
+
+.btn-block { width: 100%; margin-top: 0.75rem; }
+
+.btn-ghost {
+  @extend %btn-base;
+  background: transparent;
+  border: 1px solid $border;
+  color: $text-dim;
+  padding: 0.45rem 0.875rem;
+
+  &:hover {
+    background: $surface-2;
+    border-color: $border-hover;
+    color: $text;
+  }
+}
+
+.btn-sm {
+  font-size: 0.75rem;
+  padding: 0.35rem 0.7rem;
+  gap: 0.35rem;
+}
+
+.btn-danger {
+  @extend %btn-base;
+  background: transparent;
+  border: 1px solid rgba($error, 0.3);
+  color: $error;
+  padding: 0.575rem 1rem;
+
+  &:hover {
+    background: rgba($error, 0.08);
+    border-color: rgba($error, 0.5);
+  }
+}
+
+// ─── Spinners / Animations ───────────────────────────────────────────────────
+.spinner-xs {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  border: 1.75px solid transparent;
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: spin 0.65s linear infinite;
+  flex-shrink: 0;
+}
+
+.spinner-warn { border-top-color: $warning; }
+
+@keyframes spin        { to { transform: rotate(360deg); } }
+@keyframes pulse-dot   {
+  0%, 100% { opacity: 1;   transform: scale(1);   }
+  50%       { opacity: 0.6; transform: scale(0.85); }
+}
+@keyframes pulse-ring  {
+  0%   { transform: scale(0.8); opacity: 0.8; }
+  100% { transform: scale(1.8); opacity: 0; }
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+// ─── Drop Zone ────────────────────────────────────────────────────────────────
+.drop-zone {
+  border: 1.5px dashed $border;
+  border-radius: $r-md;
+  padding: 1.25rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: $trans;
+  text-align: center;
+  color: $text-muted;
+  user-select: none;
+
+  &:hover, &.drag-active {
+    border-color: $primary;
+    background: rgba($primary, 0.04);
+    color: $text-dim;
+  }
+
+  &.has-file {
+    border-color: rgba($success, 0.4);
+    background: rgba($success, 0.04);
+    color: $success;
+  }
+
+  .drop-zone-icon {
+    opacity: 0.5;
+    transition: opacity 0.18s;
+  }
+
+  &:hover .drop-zone-icon,
+  &.drag-active .drop-zone-icon { opacity: 0.85; }
+
+  .drop-zone-text {
+    font-size: 0.8rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+
+    em { font-style: normal; color: $accent; }
+
+    small { font-size: 0.7rem; color: $text-muted; }
+
+    .file-selected {
+      font-size: 0.8rem;
+      font-weight: 500;
+      word-break: break-all;
+    }
+  }
+}
+
+// ─── Section Progress ────────────────────────────────────────────────────────
+.progress-wrap {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.625rem;
+
+  .progress-track {
+    flex: 1;
+    height: 4px;
+    background: $border;
+    border-radius: 2px;
+    overflow: hidden;
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, $primary, $accent);
+      border-radius: 2px;
+      transition: width 0.5s $ease;
+    }
+  }
+
+  .progress-label {
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: $text-muted;
+    white-space: nowrap;
+  }
+}
+
+.progress-status {
+  font-size: 0.78rem;
+  color: $text-dim;
+  margin-bottom: 0.75rem;
+  line-height: 1.5;
+}
+
+.section-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+
+  .section-item {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+    padding: 0.3rem 0.4rem;
+    border-radius: $r-sm;
+    font-size: 0.78rem;
+    color: $text-muted;
+    transition: $trans-s;
+
+    &.item-done  { color: $success; }
+    &.item-active {
+      color: $text;
+      font-weight: 500;
+      background: rgba($primary, 0.06);
+      padding-left: 0.5rem;
+    }
+  }
+}
+
+// Step icons
+.step-icon {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+  &.step-pending {
+    border: 1.5px solid rgba(255, 255, 255, 0.15);
+    background: transparent;
+  }
+
+  &.step-active {
+    border: 1.5px solid $primary;
+    background: rgba($primary, 0.12);
+
+    .pulse-ring {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: $primary;
+      box-shadow: 0 0 0 0 rgba($primary, 0.5);
+      animation: pulse-dot 1.2s ease-in-out infinite;
+    }
+  }
+
+  &.step-done {
+    background: $success;
+    border: 1.5px solid $success-2;
+    color: #fff;
+    box-shadow: 0 0 8px rgba($success, 0.35);
+  }
+}
+
+// Phase pill
+.phase-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.25rem 0.65rem;
+  border-radius: $r-pill;
+  border: 1px solid transparent;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+
+  &.pill-idle   { color: $text-muted; background: $surface-2; border-color: $border; }
+  &.pill-active { color: $accent; background: rgba($primary, 0.1); border-color: rgba($primary, 0.25); }
+  &.pill-done   { color: $success; background: rgba($success, 0.08); border-color: rgba($success, 0.22); }
+}
+
+// ─── Thinking Panel ──────────────────────────────────────────────────────────
+.thinking-panel {
+  background: rgba($warning, 0.04);
+  border: 1px solid rgba($warning, 0.16);
+  border-radius: $r-lg;
+  overflow: hidden;
+  animation: fadeIn 0.2s $ease;
+
+  .thinking-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 1rem;
+    background: rgba($warning, 0.05);
+    border-bottom: 1px solid rgba($warning, 0.1);
+
+    .thinking-label {
+      font-size: 0.78rem;
+      font-weight: 500;
+      color: rgba($warning, 0.85);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+  }
+
+  .thinking-body {
+    max-height: 195px;
+    overflow-y: auto;
+    padding: 1rem;
+
+    pre {
+      font-family: $font-mono;
+      font-size: 0.745rem;
+      line-height: 1.7;
+      color: $text-muted;
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+  }
+}
+
+// ─── Error Alert ─────────────────────────────────────────────────────────────
+.alert-error {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.625rem;
+  padding: 0.875rem 1rem;
+  background: rgba($error, 0.07);
+  border: 1px solid rgba($error, 0.22);
+  border-radius: $r-md;
+  font-size: 0.82rem;
+  color: color.adjust($error, $lightness: 18%);
+  animation: fadeIn 0.2s $ease;
+
+  .alert-close {
+    margin-left: auto;
+    background: none;
+    border: none;
+    color: $text-muted;
+    cursor: pointer;
+    font-size: 1.1rem;
+    line-height: 1;
+    flex-shrink: 0;
+    padding: 0;
+    transition: color 0.15s;
+
+    &:hover { color: $text; }
+  }
+}
+
+// ─── Empty State ─────────────────────────────────────────────────────────────
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+
+  .empty-icon {
+    color: $text-muted;
+    opacity: 0.35;
+    margin-bottom: 1rem;
+  }
+
+  h3 {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: $text-muted;
+    margin-bottom: 0.4rem;
+  }
+
+  p {
+    font-size: 0.8rem;
+    color: $text-muted;
+    opacity: 0.7;
+    max-width: 280px;
+    line-height: 1.6;
+  }
+}
+
+// ─── PRD Output ──────────────────────────────────────────────────────────────
+.output-card { min-height: 480px; }
+
+.output-actions {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.prd-output {
+  max-height: 78vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+  animation: fadeIn 0.3s $ease;
+
+  h1, h2, h3, h4 {
+    color: $text;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    margin-top: 1.875rem;
+    margin-bottom: 0.5rem;
+
+    &:first-child { margin-top: 0; }
+  }
+
+  h1 { font-size: 1.35rem; }
+
+  h2 {
+    font-size: 1rem;
+    color: $text;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid $border;
+  }
+
+  h3 { font-size: 0.9rem; color: $text-dim; }
+  h4 { font-size: 0.85rem; color: $text-dim; font-weight: 600; }
+
+  p {
+    font-size: 0.855rem;
+    line-height: 1.8;
+    color: $text-dim;
+    margin-bottom: 0.75rem;
+  }
+
+  ul, ol {
+    padding-left: 1.375rem;
+    margin-bottom: 0.75rem;
+
+    li {
+      font-size: 0.855rem;
+      line-height: 1.8;
+      color: $text-dim;
+      margin-bottom: 0.2rem;
+    }
+  }
+
+  hr {
+    border: none;
+    border-top: 1px solid $border;
+    margin: 2rem 0;
+  }
+
+  strong { color: $text; font-weight: 600; }
+  em     { color: $accent; font-style: italic; }
+
+  a {
+    color: $accent;
+    text-decoration: underline;
+    text-decoration-color: rgba($accent, 0.4);
+    transition: color 0.15s;
+    &:hover { color: color.adjust($accent, $lightness: 10%); }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.25rem 0;
+    font-size: 0.815rem;
+
+    th {
+      background: $surface-2;
+      border: 1px solid $border;
+      padding: 0.5rem 0.875rem;
+      text-align: left;
+      font-size: 0.72rem;
+      font-weight: 700;
+      color: $text-dim;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    td {
+      border: 1px solid $border;
+      padding: 0.5rem 0.875rem;
+      color: $text-dim;
+      line-height: 1.5;
+    }
+
+    tr:nth-child(even) td { background: rgba(255, 255, 255, 0.018); }
+    tr:hover td { background: rgba(255, 255, 255, 0.03); }
+  }
+
+  pre {
+    background: $surface-2;
+    border: 1px solid $border;
+    border-radius: $r-sm;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+
+    code {
+      background: none;
+      border: none;
+      padding: 0;
+      font-size: 0.8rem;
+      color: $text-dim;
+    }
+  }
+
+  code {
+    font-family: $font-mono;
+    background: $surface-2;
+    border: 1px solid $border;
+    border-radius: 4px;
+    padding: 0.12rem 0.4rem;
+    font-size: 0.79em;
+    color: $accent;
+  }
+
+  blockquote {
+    border-left: 3px solid $primary;
+    margin: 1.25rem 0;
+    padding: 0.625rem 1rem;
+    background: rgba($primary, 0.04);
+    border-radius: 0 $r-sm $r-sm 0;
+
+    p { margin: 0; color: $text-dim; }
+  }
+}
